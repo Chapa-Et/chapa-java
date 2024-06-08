@@ -82,7 +82,16 @@ public class CustomChapaClient implements IChapaClient {
 }
 </pre>
 
+Note: From version 1.0.1, `RetryChapaClient` is added to the package. You can use this class to add retry to your calls. 
+```java
+Chapa chapa = new Chapa.ChapaBuilder()
+        .client(new RetryChapaClient()) // here
+        .secretKey("secret-key")
+        .build();
+```
 
+
+## Methods
 To initialize a transaction, you simply need to specify your information by either using our `PostData` class.
 
 ```java

@@ -9,6 +9,10 @@ import com.github.amenski.model.VerifyResponse;
 
 import java.util.Map;
 
+/**
+ *Retry capable Chapa client
+ * since 1.0.1
+ */
 import static com.github.amenski.utility.StringUtils.isBlank;
 
 public class RetryChapaClient implements IChapaClient {
