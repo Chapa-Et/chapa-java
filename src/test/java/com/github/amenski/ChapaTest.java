@@ -41,7 +41,7 @@ class ChapaTest {
                 .setDescription("It is time to pay")
                 .setLogo("https://mylogo.com/log.png");
         postData = new PostData()
-                .setAmount(new BigDecimal("100"))
+                .setAmount("100")
                 .setCurrency("ETB")
                 .setFirstName("Abebe")
                 .setLastName("Bikila")

@@ -14,7 +14,7 @@ import static com.github.amenski.utility.Util.putIfNotNull;
  */
 public class PostData {
 
-    private BigDecimal amount;
+    private String amount;
     private String currency;
     private String email;
     @SerializedName("first_name")
@@ -31,11 +31,15 @@ public class PostData {
     private String subAccountId;
     private Customization customization;
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public PostData setAmount(BigDecimal amount) {
+    public BigDecimal getAmountAsBigDecimal() {
+        return new BigDecimal(amount);
+    }
+
+    public PostData setAmount(String amount) {
         this.amount = amount;
         return this;
     }
@@ -123,7 +127,7 @@ public class PostData {
 
     public Map<String, Object> getAsMap() {
         Map<String, Object> postData = new HashMap<>();
-        putIfNotNull(postData, "amount",     amount != null ? amount.toString() : null);
+        putIfNotNull(postData, "amount",     amount);
         putIfNotNull(postData, "currency",   currency);
         putIfNotNull(postData, "email",      email);
         putIfNotNull(postData, "first_name", firstName);

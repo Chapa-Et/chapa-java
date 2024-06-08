@@ -61,9 +61,9 @@ public class Chapa {
         putIfNotNull(fields, "return_url", postData.getReturnUrl());
         putIfNotNull(fields, "callback_url", postData.getCallbackUrl());
         putIfNotNull(fields, "subaccount[id]", postData.getSubAccountId());
-        putIfNotNull(fields, "customization[logo]", Optional.ofNullable(postData.getCustomization()).map(Customization::getLogo).orElse(null));
-        putIfNotNull(fields, "customization[title]", Optional.ofNullable(postData.getCustomization()).map(Customization::getTitle).orElse(null));
-        putIfNotNull(fields, "customization[description]", Optional.ofNullable(postData.getCustomization()).map(Customization::getDescription).orElse(null));
+        putIfNotNull(fields, "customization[logo]", Optional.ofNullable(postData.getCustomization()).map(Customization::getLogo).orElse(""));
+        putIfNotNull(fields, "customization[title]", Optional.ofNullable(postData.getCustomization()).map(Customization::getTitle).orElse(""));
+        putIfNotNull(fields, "customization[description]", Optional.ofNullable(postData.getCustomization()).map(Customization::getDescription).orElse(""));
 
         if(fields.isEmpty() || isAnyNull(fields, "amount", "currency", "tx_ref")) {
             throw new ChapaException("Wrong or empty payload");
@@ -138,7 +138,9 @@ public class Chapa {
         private String secretKey;
 
         public ChapaBuilder client(IChapaClient client) {
-            if(client == null) throw new IllegalArgumentException("Client can't be null");
+            if(client == null) {
+                throw new IllegalArgumentException("Error building client, Client can't be null");
+            }
             this.client = client;
             return this;
         }

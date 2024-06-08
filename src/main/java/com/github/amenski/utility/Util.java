@@ -1,13 +1,11 @@
 package com.github.amenski.utility;
 
+import com.github.amenski.Chapa;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.github.amenski.Chapa;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.github.amenski.utility.StringUtils.isBlank;
 
@@ -29,16 +27,8 @@ public class Util {
         return JSON_MAPPER.fromJson(jsonData, Map.class);
     }
 
-    /**
-     * @return A random string followed by the current date/time value (dd-MM-yy-HH-mm-ss).
-     */
-    public static String generateTransactionReferenceToken() {
-        final LocalDateTime now = LocalDateTime.now();
-        return UUID.randomUUID().toString().substring(0, 8) + "_" + DateTimeFormatter.ofPattern("dd-MM-yy-HH-mm-ss").format(now);
-    }
-
     public static void putIfNotNull(Map<String, Object> fields, String key, String value) {
-        if(isBlank(value)) return;
+        if (isBlank(value)) return;
         fields.put(key, value);
     }
 
