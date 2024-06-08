@@ -17,9 +17,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultRetrofitClientProvider implements RetrofitClientProvider {
 
+    private long timeOutMillis = 10000;
+
+    public DefaultRetrofitClientProvider() {
+    }
+
+    public DefaultRetrofitClientProvider(long timeOutMillis) {
+        this.timeOutMillis = timeOutMillis;
+    }
+
     @Override
     public Retrofit.Builder provideRetrofitBuilder(String baseUrl) {
-        long timeOutMillis = 10000;
         OkHttpClient client = new OkHttpClient.Builder()
                 .protocols(Collections.singletonList(Protocol.HTTP_1_1))
                 .connectTimeout(timeOutMillis, TimeUnit.MILLISECONDS)

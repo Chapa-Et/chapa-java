@@ -20,8 +20,8 @@ import static com.github.amenski.utility.Util.jsonToMap;
 public class ChapaClient implements IChapaClient {
 
     public static final String BEARER = "Bearer ";
-    private String baseUrl = "https://api.chapa.co/v1/";
-    private ChapaClientApi chapaClientApi;
+    protected String baseUrl = "https://api.chapa.co/v1/";
+    protected ChapaClientApi chapaClientApi;
 
     public ChapaClient() {
         this("https://api.chapa.co/v1/");
@@ -97,8 +97,14 @@ public class ChapaClient implements IChapaClient {
     }
     
     private void buildApiClient() {
-        if (isBlank(baseUrl)) throw new ChapaException("Unable to create a client. Api baseUrl can't be empty");
+        if (isBlank(baseUrl)) {
+            throw new ChapaException("Unable to create a client. Api baseUrl can't be empty");
+        }
         chapaClientApi = new DefaultRetrofitClientProvider().buildClient(ChapaClientApi.class, baseUrl);
+    }
+
+    public void setChapaClientApi(ChapaClientApi chapaClientApi) {
+        this.chapaClientApi = chapaClientApi;
     }
 
     private String extractErrorMessageOrDefault(ResponseBody errorMessage, String defaultMessage) {

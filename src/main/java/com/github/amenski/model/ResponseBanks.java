@@ -34,8 +34,9 @@ public class ResponseBanks extends Response {
         return this;
     }
 
-    public void setData(List<Bank> data) {
+    public ResponseBanks setData(List<Bank> data) {
         this.data = data;
+        return this;
     }
 
     @Override
