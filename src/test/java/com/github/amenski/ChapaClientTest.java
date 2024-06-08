@@ -3,9 +3,9 @@ package com.github.amenski;
 import com.github.amenski.client.ChapaClient;
 import com.github.amenski.client.ChapaClientApi;
 import com.github.amenski.exception.ChapaException;
-import com.github.amenski.model.InitializeResponseData;
-import com.github.amenski.model.SubAccountResponseData;
-import com.github.amenski.model.VerifyResponseData;
+import com.github.amenski.model.InitializeResponse;
+import com.github.amenski.model.SubAccountResponse;
+import com.github.amenski.model.VerifyResponse;
 import com.google.gson.Gson;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
@@ -64,7 +64,7 @@ class ChapaClientTest {
         when(call.execute()).thenReturn(Response.success(getInitializeResponseData()));
 
         //assert
-        InitializeResponseData response = client.initialize(secretKey, new HashMap<>());
+        InitializeResponse response = client.initialize(secretKey, new HashMap<>());
         verify(chapaClientApi).initialize(anyString(), anyMap());
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getMessage(), "Hosted Link");
@@ -78,7 +78,7 @@ class ChapaClientTest {
         when(call.execute()).thenReturn(Response.success(getInitializeResponseData()));
 
         //assert
-        InitializeResponseData response = client.initialize(secretKey, "{\"ignore\": \"ignore\"}");
+        InitializeResponse response = client.initialize(secretKey, "{\"ignore\": \"ignore\"}");
         verify(chapaClientApi).initialize(anyString(), anyMap());
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getMessage(), "Hosted Link");
@@ -102,7 +102,7 @@ class ChapaClientTest {
         when(call.execute()).thenReturn(Response.success(getVerifyResponseData()));
 
         //assert
-        VerifyResponseData response = client.verify(secretKey, "ignore");
+        VerifyResponse response = client.verify(secretKey, "ignore");
         verify(chapaClientApi).verify(anyString(), anyString());
 
         Assertions.assertNotNull(response);
@@ -137,7 +137,7 @@ class ChapaClientTest {
         when(call.execute()).thenReturn(Response.success(getSubAccountResponseData()));
 
         // verify
-        SubAccountResponseData response = client.createSubAccount(secretKey, new HashMap<>());
+        SubAccountResponse response = client.createSubAccount(secretKey, new HashMap<>());
         verify(chapaClientApi).createSubAccount(anyString(), anyMap());
 
         Assertions.assertNotNull(response);
@@ -151,7 +151,7 @@ class ChapaClientTest {
         when(call.execute()).thenReturn(Response.success(getSubAccountResponseData()));
 
         // verify
-        SubAccountResponseData response = client.createSubAccount(secretKey, "{\"ignore\": \"ignore\"}");
+        SubAccountResponse response = client.createSubAccount(secretKey, "{\"ignore\": \"ignore\"}");
         verify(chapaClientApi).createSubAccount(anyString(), anyMap());
 
         Assertions.assertNotNull(response);
@@ -159,18 +159,18 @@ class ChapaClientTest {
     }
 
 
-    private static SubAccountResponseData getSubAccountResponseData() {
+    private static SubAccountResponse getSubAccountResponseData() {
         return new Gson().fromJson("{\n" +
                 "    \"message\": \"Subaccount created succesfully\",\n" +
                 "    \"status\": \"success\",\n" +
                 "    \"data\": {\n" +
                 "        \"subaccounts[id]\": \"837b4e5e-57c8-4e39-b2df-66e7886b8bdb\"\n" +
                 "    }\n" +
-                "}", SubAccountResponseData.class);
+                "}", SubAccountResponse.class);
     }
 
 
-    private static VerifyResponseData getVerifyResponseData() {
+    private static VerifyResponse getVerifyResponseData() {
         return new Gson().fromJson("{\n" +
                 "    \"message\": \"Payment details\",\n" +
                 "    \"status\": \"success\",\n" +
@@ -196,11 +196,11 @@ class ChapaClientTest {
                 "        \"created_at\": \"2023-02-02T07:05:23.000000Z\",\n" +
                 "        \"updated_at\": \"2023-02-02T07:05:23.000000Z\"\n" +
                 "    }\n" +
-                "}", VerifyResponseData.class);
+                "}", VerifyResponse.class);
     }
 
 
-    private static InitializeResponseData getInitializeResponseData() {
-        return new Gson().fromJson("{\"data\":{\"checkout_url\":\"https://checkout.chapa.co/checkout/payment/somestring\"},\"message\":\"Hosted Link\",\"status\":\"success\"}", InitializeResponseData.class);
+    private static InitializeResponse getInitializeResponseData() {
+        return new Gson().fromJson("{\"data\":{\"checkout_url\":\"https://checkout.chapa.co/checkout/payment/somestring\"},\"message\":\"Hosted Link\",\"status\":\"success\"}", InitializeResponse.class);
     }
 }

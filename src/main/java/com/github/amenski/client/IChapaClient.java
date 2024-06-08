@@ -1,9 +1,9 @@
 package com.github.amenski.client;
 
-import com.github.amenski.model.InitializeResponseData;
+import com.github.amenski.model.InitializeResponse;
 import com.github.amenski.model.ResponseBanks;
-import com.github.amenski.model.SubAccountResponseData;
-import com.github.amenski.model.VerifyResponseData;
+import com.github.amenski.model.SubAccountResponse;
+import com.github.amenski.model.VerifyResponse;
 import com.github.amenski.exception.ChapaException;
 
 import java.util.Map;
@@ -17,10 +17,10 @@ public interface IChapaClient {
      *
      * @param secretKey
      * @param fields
-     * @return InitializeResponseData
+     * @return InitializeResponse
      * @throws ChapaException
      */
-    InitializeResponseData initialize(final String secretKey, Map<String, Object> fields) throws ChapaException;
+    InitializeResponse initialize(final String secretKey, Map<String, Object> fields) throws ChapaException;
 
     /**
      * An alias to {@link #initialize(String, Map)}
@@ -29,10 +29,10 @@ public interface IChapaClient {
      *
      * @param secretKey
      * @param body
-     * @return InitializeResponseData
+     * @return InitializeResponse
      * @throws ChapaException
      */
-    InitializeResponseData initialize(final String secretKey, final String body) throws ChapaException;
+    InitializeResponse initialize(final String secretKey, final String body) throws ChapaException;
 
     /**
      * Verify a transaction
@@ -41,10 +41,10 @@ public interface IChapaClient {
      *
      * @param secretKey
      * @param transactionReference
-     * @return VerifyResponseData
+     * @return VerifyResponse
      * @throws ChapaException
      */
-    VerifyResponseData verify(String secretKey, String transactionReference) throws ChapaException;
+    VerifyResponse verify(String secretKey, String transactionReference) throws ChapaException;
 
     /**
      * Get all supported banks
@@ -65,10 +65,10 @@ public interface IChapaClient {
      *
      * @param secretKey
      * @param fields
-     * @return SubAccountResponseData
+     * @return SubAccountResponse
      * @throws ChapaException
      */
-    SubAccountResponseData createSubAccount(String secretKey, Map<String, Object> fields) throws ChapaException;
+    SubAccountResponse createSubAccount(String secretKey, Map<String, Object> fields) throws ChapaException;
 
     /**
      * Create sub account for split payment, an alternative method to {@link #createSubAccount(String, Map)}
@@ -77,8 +77,8 @@ public interface IChapaClient {
      *
      * @param body
      * @param secretKey
-     * @return SubAccountResponseData
+     * @return SubAccountResponse
      * @throws ChapaException
      */
-    SubAccountResponseData createSubAccount(String secretKey, String body) throws ChapaException;
+    SubAccountResponse createSubAccount(String secretKey, String body) throws ChapaException;
 }

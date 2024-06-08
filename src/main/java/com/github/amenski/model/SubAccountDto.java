@@ -1,10 +1,11 @@
 package com.github.amenski.model;
 
-import com.github.amenski.utility.Util;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.github.amenski.utility.Util.putIfNotNull;
 
 public class SubAccountDto {
 
@@ -77,12 +78,12 @@ public class SubAccountDto {
 
     public Map<String, Object> getAsMap() {
         Map<String, Object> account = new HashMap<>();
-        Util.putIfNotNull(account, "business_name",  businessName);
-        Util.putIfNotNull(account, "account_name",   accountName);
-        Util.putIfNotNull(account, "account_number", accountNumber);
-        Util.putIfNotNull(account, "bank_code",      bankCode);
-        Util.putIfNotNull(account, "split_type",     splitType.name().toLowerCase());
-        Util.putIfNotNull(account, "split_value",    splitValue != null ? splitValue.toString() : null);
+        putIfNotNull(account, "business_name",  businessName);
+        putIfNotNull(account, "account_name",   accountName);
+        putIfNotNull(account, "account_number", accountNumber);
+        putIfNotNull(account, "bank_code",      bankCode);
+        putIfNotNull(account, "split_type",     splitType.name().toLowerCase());
+        putIfNotNull(account, "split_value",    splitValue != null ? splitValue.toString() : null);
         return account;
     }
 }

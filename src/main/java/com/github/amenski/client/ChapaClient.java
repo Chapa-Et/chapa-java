@@ -1,11 +1,10 @@
 package com.github.amenski.client;
 
 import com.github.amenski.client.provider.DefaultRetrofitClientProvider;
-import com.github.amenski.client.provider.RetrierRetrofitClientProvider;
-import com.github.amenski.model.InitializeResponseData;
+import com.github.amenski.model.InitializeResponse;
 import com.github.amenski.model.ResponseBanks;
-import com.github.amenski.model.SubAccountResponseData;
-import com.github.amenski.model.VerifyResponseData;
+import com.github.amenski.model.SubAccountResponse;
+import com.github.amenski.model.VerifyResponse;
 import com.github.amenski.exception.ChapaException;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -36,9 +35,9 @@ public class ChapaClient implements IChapaClient {
     }
 
     @Override
-    public InitializeResponseData initialize(final String secretKey, Map<String, Object> fields) {
+    public InitializeResponse initialize(final String secretKey, Map<String, Object> fields) {
         try {
-            Response<InitializeResponseData> response = chapaClientApi.initialize(BEARER + secretKey, fields).execute();
+            Response<InitializeResponse> response = chapaClientApi.initialize(BEARER + secretKey, fields).execute();
             if (!response.isSuccessful()) {
                 throw new ChapaException(extractErrorMessageOrDefault(response.errorBody(), "Unable to Initialize transaction."));
             }
@@ -49,14 +48,14 @@ public class ChapaClient implements IChapaClient {
     }
 
     @Override
-    public InitializeResponseData initialize(final String secretKey, final String body) {
+    public InitializeResponse initialize(final String secretKey, final String body) {
         return this.initialize(secretKey, jsonToMap(body));
     }
 
     @Override
-    public VerifyResponseData verify(final String secretKey, final String transactionReference) {
+    public VerifyResponse verify(final String secretKey, final String transactionReference) {
         try {
-            Response<VerifyResponseData> response = chapaClientApi.verify(BEARER + secretKey, transactionReference).execute();
+            Response<VerifyResponse> response = chapaClientApi.verify(BEARER + secretKey, transactionReference).execute();
             if (!response.isSuccessful()) {
                 throw new ChapaException(extractErrorMessageOrDefault(response.errorBody(), "Unable to verify transaction."));
             }
@@ -80,9 +79,9 @@ public class ChapaClient implements IChapaClient {
     }
 
     @Override
-    public SubAccountResponseData createSubAccount(final String secretKey, Map<String, Object> fields) {
+    public SubAccountResponse createSubAccount(final String secretKey, Map<String, Object> fields) {
         try {
-            Response<SubAccountResponseData> response = chapaClientApi.createSubAccount(BEARER + secretKey, fields).execute();
+            Response<SubAccountResponse> response = chapaClientApi.createSubAccount(BEARER + secretKey, fields).execute();
             if (!response.isSuccessful()) {
                 throw new ChapaException(extractErrorMessageOrDefault(response.errorBody(), "Unable to create sub account."));
             }
@@ -93,7 +92,7 @@ public class ChapaClient implements IChapaClient {
     }
 
     @Override
-    public SubAccountResponseData createSubAccount(final String secretKey, final String body) throws ChapaException {
+    public SubAccountResponse createSubAccount(final String secretKey, final String body) throws ChapaException {
         return this.createSubAccount(secretKey, jsonToMap(body));
     }
     

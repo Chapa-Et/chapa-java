@@ -1,20 +1,20 @@
 package com.github.amenski.model;
 
 /**
- * The <code>ResponseData</code> class is an abstract class that
+ * The <code>Response</code> class is an abstract class that
  * represents the response data from Chapa API.
  */
-public abstract class ResponseData {
+public abstract class Response {
 
     private String message;
     private String status;
     private int statusCode;
     private String rawJson;
 
-    public ResponseData() {
+    public Response() {
     }
 
-    public ResponseData(String rawJson, String message, String status, int statusCode) {
+    public Response(String rawJson, String message, String status, int statusCode) {
         this.message = message;
         this.status = status;
         this.statusCode = statusCode;
@@ -25,7 +25,7 @@ public abstract class ResponseData {
         return message;
     }
 
-    public ResponseData setMessage(String message) {
+    public Response setMessage(String message) {
         this.message = message;
         return this;
     }
@@ -34,7 +34,7 @@ public abstract class ResponseData {
         return status;
     }
 
-    public ResponseData setStatus(String status) {
+    public Response setStatus(String status) {
         this.status = status;
         return this;
     }
@@ -43,7 +43,7 @@ public abstract class ResponseData {
         return statusCode;
     }
 
-    public ResponseData setStatusCode(int statusCode) {
+    public Response setStatusCode(int statusCode) {
         this.statusCode = statusCode;
         return this;
     }
@@ -60,7 +60,7 @@ public abstract class ResponseData {
         return rawJson;
     }
 
-    public ResponseData setRawJson(String rawJson) {
+    public Response setRawJson(String rawJson) {
         this.rawJson = rawJson;
         return this;
     }

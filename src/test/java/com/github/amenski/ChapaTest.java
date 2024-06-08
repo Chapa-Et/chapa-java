@@ -1,12 +1,12 @@
 package com.github.amenski;
 
 import com.github.amenski.model.Customization;
-import com.github.amenski.model.InitializeResponseData;
+import com.github.amenski.model.InitializeResponse;
 import com.github.amenski.model.PostData;
 import com.github.amenski.model.SplitTypeEnum;
 import com.github.amenski.model.SubAccountDto;
-import com.github.amenski.model.SubAccountResponseData;
-import com.github.amenski.model.VerifyResponseData;
+import com.github.amenski.model.SubAccountResponse;
+import com.github.amenski.model.VerifyResponse;
 import com.github.amenski.client.IChapaClient;
 import com.github.amenski.exception.ChapaException;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -81,13 +80,13 @@ class ChapaTest {
     @Test
     public void initializeTransaction_success() throws ChapaException {
         // when
-        InitializeResponseData.Data data = new InitializeResponseData.Data();
+        InitializeResponse.Data data = new InitializeResponse.Data();
         data.setCheckOutUrl("");
-        InitializeResponseData response = new InitializeResponseData("","","", 200, data);
+        InitializeResponse response = new InitializeResponse("","","", 200, data);
         when(chapaClient.initialize(anyString(), anyMap())).thenReturn(response);
 
         // verify
-        InitializeResponseData responseData = chapa.initialize(postData);
+        InitializeResponse responseData = chapa.initialize(postData);
 
         Assertions.assertNotNull(responseData);
         Assertions.assertNotNull(responseData.getData().getCheckOutUrl());
@@ -96,13 +95,13 @@ class ChapaTest {
     @Test
     public void initializeTransaction_success2() throws ChapaException {
         // when
-        InitializeResponseData.Data data = new InitializeResponseData.Data();
+        InitializeResponse.Data data = new InitializeResponse.Data();
         data.setCheckOutUrl("");
-        InitializeResponseData response = new InitializeResponseData("","","", 200, data);
+        InitializeResponse response = new InitializeResponse("","","", 200, data);
         when(chapaClient.initialize(anyString(), anyString())).thenReturn(response);
 
         // verify
-        InitializeResponseData responseData = chapa.initialize(postDataString);
+        InitializeResponse responseData = chapa.initialize(postDataString);
 
         Assertions.assertNotNull(responseData);
         Assertions.assertNotNull(responseData.getData().getCheckOutUrl());
@@ -128,7 +127,7 @@ class ChapaTest {
     @Test
     public void verifyTransaction_success() throws ChapaException {
         // given
-        VerifyResponseData expectedResponseData = new VerifyResponseData()
+        VerifyResponse expectedResponseData = new VerifyResponse()
                 .setMessage("Payment not paid yet")
                 .setStatus("null")
                 .setStatusCode(200)
@@ -136,7 +135,7 @@ class ChapaTest {
 
         // when
         when(chapaClient.verify(anyString(), anyString())).thenReturn(expectedResponseData);
-        VerifyResponseData actualResponseData = chapa.verify("test-transaction");
+        VerifyResponse actualResponseData = chapa.verify("test-transaction");
 
         // verify
         verify(chapaClient).verify(anyString(), anyString());
@@ -147,14 +146,14 @@ class ChapaTest {
     @Test
     public void createSubAccount_success() throws Throwable {
         // given
-        SubAccountResponseData expectedResponseData = new SubAccountResponseData()
+        SubAccountResponse expectedResponseData = new SubAccountResponse()
                 .setMessage("The Bank Code is incorrect please check if it does exist with our getbanks endpoint.")
                 .setStatus("failed")
                 .setStatusCode(200);
 
         // when
         when(chapaClient.createSubAccount(anyString(), anyMap())).thenReturn(expectedResponseData);
-        SubAccountResponseData actualResponse = chapa.createSubAccount(subAccountDto);
+        SubAccountResponse actualResponse = chapa.createSubAccount(subAccountDto);
 
         // then
         verify(chapaClient).createSubAccount(anyString(), anyMap());
