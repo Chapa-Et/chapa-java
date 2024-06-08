@@ -32,7 +32,7 @@ Visit official [Chapa's API Documentation](https://developer.chapa.co/docs)
     <dependency>
       <groupId>com.github.amenski</groupId>
       <artifactId>chapa</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
 ```
 Or add the below gradle dependency to your `build.gradle` file.
@@ -82,7 +82,16 @@ public class CustomChapaClient implements IChapaClient {
 }
 </pre>
 
+Note: From version 1.0.1, `RetryChapaClient` is added to the package. You can use this class to add retry to your calls. 
+```java
+Chapa chapa = new Chapa.ChapaBuilder()
+        .client(new RetryChapaClient()) // here
+        .secretKey("secret-key")
+        .build();
+```
 
+
+## Methods
 To initialize a transaction, you simply need to specify your information by either using our `PostData` class.
 
 ```java
@@ -91,7 +100,7 @@ Customization customization = new Customization()
         .setDescription("It is time to pay")
         .setLogo("https://mylogo.com/log.png");
 PostData postData = new PostData()
-        .setAmount(new BigDecimal("100"))
+        .setAmount("100")
         .setCurrency("ETB")
         .setFirstName("Abebe")
         .setLastName("Bikila")
@@ -184,12 +193,11 @@ import com.github.amenski.model.ResponseBanks;
 import com.github.amenski.model.SplitTypeEnum;
 import com.github.amenski.model.SubAccountDto;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public class ChapaExample {
 
-    public static void main(String[] args) throws ChapaException {
+    public static void main(String[] args) {
         Chapa chapa = new Chapa.ChapaBuilder()
                 .client(new ChapaClient())
                 .secretKey("CHASECK_TEST-...")
@@ -200,7 +208,7 @@ public class ChapaExample {
                 .setDescription("It is time to pay")
                 .setLogo("https://mylogo.com/log.png");
         PostData postData = new PostData()
-                .setAmount(new BigDecimal("100"))
+                .setAmount("100")
                 .setCurrency("ETB")
                 .setFirstName("Abebe")
                 .setLastName("Bikila")

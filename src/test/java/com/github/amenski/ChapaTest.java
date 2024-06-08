@@ -1,14 +1,16 @@
 package com.github.amenski;
 
-import com.github.amenski.model.Customization;
-import com.github.amenski.model.InitializeResponseData;
-import com.github.amenski.model.PostData;
-import com.github.amenski.model.SplitTypeEnum;
-import com.github.amenski.model.SubAccountDto;
-import com.github.amenski.model.SubAccountResponseData;
-import com.github.amenski.model.VerifyResponseData;
 import com.github.amenski.client.IChapaClient;
 import com.github.amenski.exception.ChapaException;
+import com.github.amenski.model.Bank;
+import com.github.amenski.model.Customization;
+import com.github.amenski.model.InitializeResponse;
+import com.github.amenski.model.PostData;
+import com.github.amenski.model.ResponseBanks;
+import com.github.amenski.model.SplitTypeEnum;
+import com.github.amenski.model.SubAccountDto;
+import com.github.amenski.model.SubAccountResponse;
+import com.github.amenski.model.VerifyResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,11 +18,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyMap;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +48,7 @@ class ChapaTest {
                 .setDescription("It is time to pay")
                 .setLogo("https://mylogo.com/log.png");
         postData = new PostData()
-                .setAmount(new BigDecimal("100"))
+                .setAmount("100")
                 .setCurrency("ETB")
                 .setFirstName("Abebe")
                 .setLastName("Bikila")
@@ -81,45 +88,46 @@ class ChapaTest {
     @Test
     public void initializeTransaction_success() throws ChapaException {
         // when
-        InitializeResponseData.Data data = new InitializeResponseData.Data();
+        InitializeResponse.Data data = new InitializeResponse.Data();
         data.setCheckOutUrl("");
-        InitializeResponseData response = new InitializeResponseData("","","", 200, data);
+        InitializeResponse response = new InitializeResponse("","","", 200, data);
         when(chapaClient.initialize(anyString(), anyMap())).thenReturn(response);
 
         // verify
-        InitializeResponseData responseData = chapa.initialize(postData);
+        InitializeResponse responseData = chapa.initialize(postData);
 
-        Assertions.assertNotNull(responseData);
-        Assertions.assertNotNull(responseData.getData().getCheckOutUrl());
+        assertNotNull(responseData);
+        assertNotNull(responseData.getData().getCheckOutUrl());
     }
 
     @Test
     public void initializeTransaction_success2() throws ChapaException {
         // when
-        InitializeResponseData.Data data = new InitializeResponseData.Data();
+        InitializeResponse.Data data = new InitializeResponse.Data();
         data.setCheckOutUrl("");
-        InitializeResponseData response = new InitializeResponseData("","","", 200, data);
+        InitializeResponse response = new InitializeResponse("","","", 200, data);
         when(chapaClient.initialize(anyString(), anyString())).thenReturn(response);
 
         // verify
-        InitializeResponseData responseData = chapa.initialize(postDataString);
+        InitializeResponse responseData = chapa.initialize(postDataString);
 
-        Assertions.assertNotNull(responseData);
-        Assertions.assertNotNull(responseData.getData().getCheckOutUrl());
+        assertNotNull(responseData);
+        assertNotNull(responseData.getData().getCheckOutUrl());
     }
 
 
     @Test
     public void getBank_success() throws ChapaException {
-//        // when
-//        when(chapaClient.getBanks(anyString())).thenReturn(Collections.singletonList(new Bank()));
-//
-//        // verify
-//        List<Bank> responseData = chapa.getBanks();
-//
-//        Assertions.assertNotNull(responseData);
-//        Assertions.assertTrue(responseData.size() == 1);
+        // when
+        when(chapaClient.getBanks(anyString())).thenReturn(new ResponseBanks().setData(Collections.singletonList(new Bank())));
+
+        // verify
+        ResponseBanks responseData = chapa.getBanks();
+
+        assertNotNull(responseData);
+        assertFalse(responseData.getData().isEmpty());
     }
+
     @Test
     public void verifyTransaction_fail() {
         Assertions.assertThrows(ChapaException.class, () -> chapa.verify(""));
@@ -128,7 +136,7 @@ class ChapaTest {
     @Test
     public void verifyTransaction_success() throws ChapaException {
         // given
-        VerifyResponseData expectedResponseData = new VerifyResponseData()
+        VerifyResponse expectedResponseData = new VerifyResponse()
                 .setMessage("Payment not paid yet")
                 .setStatus("null")
                 .setStatusCode(200)
@@ -136,29 +144,29 @@ class ChapaTest {
 
         // when
         when(chapaClient.verify(anyString(), anyString())).thenReturn(expectedResponseData);
-        VerifyResponseData actualResponseData = chapa.verify("test-transaction");
+        VerifyResponse actualResponseData = chapa.verify("test-transaction");
 
         // verify
         verify(chapaClient).verify(anyString(), anyString());
-        Assertions.assertEquals(actualResponseData.getMessage(), "Payment not paid yet");
-        Assertions.assertEquals(actualResponseData.getStatusCode(), 200);
+        assertEquals(actualResponseData.getMessage(), "Payment not paid yet");
+        assertEquals(actualResponseData.getStatusCode(), 200);
     }
 
     @Test
     public void createSubAccount_success() throws Throwable {
         // given
-        SubAccountResponseData expectedResponseData = new SubAccountResponseData()
+        SubAccountResponse expectedResponseData = new SubAccountResponse()
                 .setMessage("The Bank Code is incorrect please check if it does exist with our getbanks endpoint.")
                 .setStatus("failed")
                 .setStatusCode(200);
 
         // when
         when(chapaClient.createSubAccount(anyString(), anyMap())).thenReturn(expectedResponseData);
-        SubAccountResponseData actualResponse = chapa.createSubAccount(subAccountDto);
+        SubAccountResponse actualResponse = chapa.createSubAccount(subAccountDto);
 
         // then
         verify(chapaClient).createSubAccount(anyString(), anyMap());
-        Assertions.assertEquals(actualResponse.getMessage(), "The Bank Code is incorrect please check if it does exist with our getbanks endpoint.");
-        Assertions.assertEquals(actualResponse.getStatusCode(), 200);
+        assertEquals(actualResponse.getMessage(), "The Bank Code is incorrect please check if it does exist with our getbanks endpoint.");
+        assertEquals(actualResponse.getStatusCode(), 200);
     }
 }

@@ -1,5 +1,6 @@
 package com.github.amenski.model;
 
+import com.github.amenski.utility.Validate;
 import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ import static com.github.amenski.utility.Util.putIfNotNull;
  */
 public class PostData {
 
-    private BigDecimal amount;
+    private String amount;
     private String currency;
     private String email;
     @SerializedName("first_name")
@@ -30,12 +31,18 @@ public class PostData {
     @SerializedName("subaccounts[id]")
     private String subAccountId;
     private Customization customization;
+    @SerializedName("phone_number")
+    private String phoneNumber;
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public PostData setAmount(BigDecimal amount) {
+    public BigDecimal getAmountAsBigDecimal() {
+        return new BigDecimal(amount);
+    }
+
+    public PostData setAmount(String amount) {
         this.amount = amount;
         return this;
     }
@@ -54,6 +61,9 @@ public class PostData {
     }
 
     public PostData setEmail(String email) {
+        if (!Validate.isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email");
+        }
         this.email = email;
         return this;
     }
@@ -121,14 +131,27 @@ public class PostData {
         return this;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public PostData setPhoneNumber(String phoneNumber) {
+        if (!Validate.isValidPhoneNumber(phoneNumber)) {
+            throw new IllegalArgumentException("Invalid isValidPhoneNumber number");
+        }
+        this.phoneNumber = phoneNumber;
+        return this;
+    }
+
     public Map<String, Object> getAsMap() {
         Map<String, Object> postData = new HashMap<>();
-        putIfNotNull(postData, "amount",     amount != null ? amount.toString() : null);
-        putIfNotNull(postData, "currency",   currency);
-        putIfNotNull(postData, "email",      email);
-        putIfNotNull(postData, "first_name", firstName);
-        putIfNotNull(postData, "last_name",  lastName);
-        putIfNotNull(postData, "tx_ref",     txRef);
+        putIfNotNull(postData, "amount",       amount);
+        putIfNotNull(postData, "currency",     currency);
+        putIfNotNull(postData, "email",        email);
+        putIfNotNull(postData, "first_name",   firstName);
+        putIfNotNull(postData, "last_name",    lastName);
+        putIfNotNull(postData, "tx_ref",       txRef);
+        putIfNotNull(postData, "phone_number", phoneNumber);
         return postData;
     }
 }

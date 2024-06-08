@@ -1,11 +1,13 @@
 package com.github.amenski.client.provider;
 
+import com.github.amenski.client.ChapaClientApi;
 import io.github.resilience4j.core.IntervalFunction;
 import io.github.resilience4j.retrofit.RetryCallAdapter;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -18,7 +20,7 @@ import java.util.function.Predicate;
  *
  * Provides retrofit client to make calls to chapa api. <br>
  *
- * This implementation will retry calls to chapa api upto {@link RETRY_COUNT (3)} times.<br>
+ * This implementation will retry calls to chapa api upto 3 (default) times. You can set the number of retries too.<br>
  *
  * Retry will be done with an <a href="https://en.wikipedia.org/wiki/Exponential_backoff">ExponentialBackoff</a> strategy.<br>
  *
@@ -42,14 +44,31 @@ import java.util.function.Predicate;
  */
 public class RetrierRetrofitClientProvider implements RetrofitClientProvider {
 
-    private static final int RETRY_COUNT = 3;
+    private int retryCount = 3;
+    private long timeOutMillis = 10000;
+
+    public RetrierRetrofitClientProvider() {
+    }
+
+    public RetrierRetrofitClientProvider(long timeOutMillis) {
+        this(timeOutMillis, 3);
+    }
+
+    public RetrierRetrofitClientProvider(int retryCount) {
+        this(10000, retryCount);
+    }
+
+    public RetrierRetrofitClientProvider(long timeOutMillis, int retryCount) {
+        this.timeOutMillis = timeOutMillis;
+        this.retryCount = retryCount;
+    }
 
     @Override
     public Retrofit.Builder provideRetrofitBuilder(String baseUrl) {
-        long timeOutMillis = 10000;
         OkHttpClient client = new OkHttpClient.Builder()
                 .protocols(Collections.singletonList(Protocol.HTTP_1_1))
                 .connectTimeout(timeOutMillis, TimeUnit.MILLISECONDS)
+//                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .readTimeout(timeOutMillis, TimeUnit.MILLISECONDS)
                 .writeTimeout(timeOutMillis, TimeUnit.MILLISECONDS)
                 .build();
@@ -61,9 +80,9 @@ public class RetrierRetrofitClientProvider implements RetrofitClientProvider {
                 .client(client);
     }
 
-    private static Retry retry(long initialIntervalMillis) {
+    private Retry retry(long initialIntervalMillis) {
         RetryConfig retryCOnfig = RetryConfig.custom()
-                .maxAttempts(RETRY_COUNT)
+                .maxAttempts(retryCount)
                 .intervalFunction(IntervalFunction.ofExponentialBackoff(initialIntervalMillis, 2))
                 .retryOnResult(new RetryPredicate())
                 .failAfterMaxAttempts(true)
@@ -76,8 +95,12 @@ public class RetrierRetrofitClientProvider implements RetrofitClientProvider {
 
         @Override
         public boolean test(Object value) {
-            Response<Object> response = (Response<Object>) value;
-            return !response.isSuccessful();
+            try {
+                Response<Object> response = (Response<Object>) value;
+                return !response.isSuccessful();
+            } catch (ClassCastException e) {
+                return true;
+            }
         }
     }
 }
