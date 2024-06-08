@@ -60,10 +60,10 @@ public class Chapa {
 
         putIfNotNull(fields, "return_url", postData.getReturnUrl());
         putIfNotNull(fields, "callback_url", postData.getCallbackUrl());
-        putIfNotNull(fields, "subaccount[id]", postData.getSubAccountId());
-        putIfNotNull(fields, "customization[logo]", Optional.ofNullable(postData.getCustomization()).map(Customization::getLogo).orElse(EMPTY));
+        putIfNotNull(fields, "subaccounts[id]", postData.getSubAccountId());
         putIfNotNull(fields, "customization[title]", Optional.ofNullable(postData.getCustomization()).map(Customization::getTitle).orElse(EMPTY));
         putIfNotNull(fields, "customization[description]", Optional.ofNullable(postData.getCustomization()).map(Customization::getDescription).orElse(EMPTY));
+        putIfNotNull(fields, "phone_number", Optional.ofNullable(postData.getPhoneNumber()).orElse(EMPTY));
 
         if(fields.isEmpty() || isAnyNull(fields, "amount", "currency", "tx_ref")) {
             throw new ChapaException("Wrong or empty payload");

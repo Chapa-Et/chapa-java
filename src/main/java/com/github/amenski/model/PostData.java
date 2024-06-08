@@ -1,5 +1,6 @@
 package com.github.amenski.model;
 
+import com.github.amenski.utility.Validate;
 import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
@@ -30,6 +31,8 @@ public class PostData {
     @SerializedName("subaccounts[id]")
     private String subAccountId;
     private Customization customization;
+    @SerializedName("phone_number")
+    private String phoneNumber;
 
     public String getAmount() {
         return amount;
@@ -58,6 +61,9 @@ public class PostData {
     }
 
     public PostData setEmail(String email) {
+        if (!Validate.isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email");
+        }
         this.email = email;
         return this;
     }
@@ -125,14 +131,27 @@ public class PostData {
         return this;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public PostData setPhoneNumber(String phoneNumber) {
+        if (!Validate.isValidPhoneNumber(phoneNumber)) {
+            throw new IllegalArgumentException("Invalid isValidPhoneNumber number");
+        }
+        this.phoneNumber = phoneNumber;
+        return this;
+    }
+
     public Map<String, Object> getAsMap() {
         Map<String, Object> postData = new HashMap<>();
-        putIfNotNull(postData, "amount",     amount);
-        putIfNotNull(postData, "currency",   currency);
-        putIfNotNull(postData, "email",      email);
-        putIfNotNull(postData, "first_name", firstName);
-        putIfNotNull(postData, "last_name",  lastName);
-        putIfNotNull(postData, "tx_ref",     txRef);
+        putIfNotNull(postData, "amount",       amount);
+        putIfNotNull(postData, "currency",     currency);
+        putIfNotNull(postData, "email",        email);
+        putIfNotNull(postData, "first_name",   firstName);
+        putIfNotNull(postData, "last_name",    lastName);
+        putIfNotNull(postData, "tx_ref",       txRef);
+        putIfNotNull(postData, "phone_number", phoneNumber);
         return postData;
     }
 }
